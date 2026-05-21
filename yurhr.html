@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ЮрHR — цифровой сервис правовой поддержки HR-службы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3EFE6; --paper-2:#ECE7DA; --surface:#FBFAF6; --surface-2:#F7F4EC;
+  --ink:#1B1A17; --ink-soft:#4A463E; --muted:#86806F;
+  --line:#DDD6C5; --line-strong:#C9C0AC;
+  --green:#14392E; --green-2:#1E4D3C; --green-soft:#E6EDE8;
+  --brass:#A77B3A; --brass-soft:#F0E7D4;
+  --red:#8A2B2B; --red-soft:#F3E2E0;
+  --shadow:0 1px 2px rgba(27,26,23,.04),0 8px 28px -12px rgba(20,57,46,.22);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:'Onest',-apple-system,sans-serif;
+  font-weight:400; line-height:1.55; -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 12% 8%,rgba(167,123,58,.05),transparent 38%),radial-gradient(circle at 88% 0%,rgba(20,57,46,.05),transparent 40%);
+  min-height:100vh;
+}
+.serif{font-family:'Playfair Display',Georgia,serif}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+header.top{border-bottom:1px solid var(--line);background:rgba(243,239,230,.86);backdrop-filter:blur(8px);position:sticky;top:0;z-index:50}
+.top-in{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 0}
+.brand{display:flex;align-items:center;gap:13px;cursor:pointer}
+.mark{width:42px;height:42px;border-radius:11px;flex:none;background:linear-gradient(150deg,var(--green),var(--green-2));display:grid;place-items:center;color:var(--brass-soft);font-family:'Playfair Display',serif;font-weight:700;font-size:21px;box-shadow:0 6px 18px -8px rgba(20,57,46,.6)}
+.brand h1{font-size:19px;font-weight:600;letter-spacing:-.2px;line-height:1.1}
+.brand .sub{font-size:11.5px;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
+.badge-mvp{font-size:10px;font-weight:600;letter-spacing:.8px;color:var(--brass);border:1px solid var(--brass);border-radius:20px;padding:3px 9px;text-transform:uppercase}
+
+nav.tabs{border-bottom:1px solid var(--line);background:var(--surface-2)}
+.tabs-in{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs-in::-webkit-scrollbar{display:none}
+.tab{appearance:none;background:none;border:none;cursor:pointer;font-family:inherit;font-size:14.5px;font-weight:500;color:var(--ink-soft);padding:15px 18px;white-space:nowrap;position:relative;transition:color .18s;display:flex;align-items:center;gap:8px}
+.tab:hover{color:var(--green)}
+.tab.active{color:var(--green);font-weight:600}
+.tab.active::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:2.5px;background:var(--brass);border-radius:3px 3px 0 0}
+.tab .ic{font-size:16px}
+
+main{padding:34px 0 80px}
+.view{display:none;animation:fade .35s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--brass);margin-bottom:9px}
+.h-sec{font-size:32px;font-weight:600;letter-spacing:-.5px;line-height:1.08;margin-bottom:10px}
+.lead{font-size:16px;color:var(--ink-soft);max-width:680px;margin-bottom:26px}
+
+.hero{position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:linear-gradient(155deg,#163b30,#0f2a22);color:#EFEAD9;padding:46px 40px;margin-bottom:34px;box-shadow:var(--shadow)}
+.hero::before{content:"§";position:absolute;right:6px;bottom:-58px;font-family:'Playfair Display',serif;font-size:300px;color:rgba(167,123,58,.12);line-height:1}
+.hero h2{font-size:38px;font-weight:600;letter-spacing:-.8px;line-height:1.06;max-width:640px;margin-bottom:14px;position:relative;z-index:1}
+.hero p{font-size:16.5px;color:#D9D2BE;max-width:580px;position:relative;z-index:1}
+.hero .stats{display:flex;flex-wrap:wrap;gap:34px;margin-top:30px;position:relative;z-index:1}
+.hero .stats .n{font-family:'Playfair Display',serif;font-size:30px;font-weight:600;color:#fff}
+.hero .stats .l{font-size:12.5px;color:#B9B19B;letter-spacing:.3px}
+
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--line-strong)}
+.card .ci{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:23px;margin-bottom:15px;background:var(--green-soft);color:var(--green)}
+.card h3{font-size:18px;font-weight:600;margin-bottom:6px;letter-spacing:-.2px}
+.card p{font-size:13.5px;color:var(--muted);line-height:1.5}
+.card .go{margin-top:14px;font-size:13px;font-weight:600;color:var(--brass)}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:var(--shadow)}
+.grid2{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start}
+
+.list-pick{display:flex;flex-direction:column;gap:8px}
+.pick{appearance:none;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 15px;cursor:pointer;font-family:inherit;transition:.15s;display:flex;gap:12px;align-items:flex-start}
+.pick:hover{border-color:var(--brass);background:var(--surface-2)}
+.pick.sel{border-color:var(--green);background:var(--green-soft)}
+.pick .pic{font-size:19px;flex:none;margin-top:1px}
+.pick .pt{font-size:14.5px;font-weight:600;color:var(--ink);line-height:1.25}
+.pick .ps{font-size:12px;color:var(--muted);margin-top:2px}
+
+label.fld{display:block;margin-bottom:14px}
+label.fld .lab{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:5px}
+label.fld .hint{font-weight:400;color:var(--muted);font-size:11.5px}
+input,select,textarea{width:100%;font-family:inherit;font-size:14px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;transition:.15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green);background:#fff;box-shadow:0 0 0 3px rgba(20,57,46,.08)}
+textarea{min-height:74px;resize:vertical;line-height:1.5}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.btn{appearance:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border-radius:10px;padding:11px 18px;border:1px solid transparent;transition:.15s;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn-primary{background:var(--green);color:#F3EFE6}
+.btn-primary:hover{background:var(--green-2)}
+.btn-ghost{background:var(--surface);color:var(--green);border-color:var(--line-strong)}
+.btn-ghost:hover{background:var(--surface-2);border-color:var(--green)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+
+.doc-out{margin-top:20px;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+.doc-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;background:var(--surface-2);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.doc-bar .t{font-size:12.5px;font-weight:600;color:var(--ink-soft);letter-spacing:.3px}
+.doc-bar .acts{display:flex;gap:8px}
+.mini{appearance:none;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid var(--line-strong);background:#fff;color:var(--green);border-radius:8px;padding:7px 11px;transition:.15s}
+.mini:hover{background:var(--green);color:#fff;border-color:var(--green)}
+#docText{white-space:pre-wrap;font-family:'Courier New',monospace;font-size:13px;line-height:1.62;color:var(--ink);padding:24px 26px;max-height:560px;overflow:auto}
+
+.steps{counter-reset:s;display:flex;flex-direction:column;gap:0}
+.step{position:relative;padding:0 0 22px 46px}
+.step::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:var(--green);color:#F3EFE6;display:grid;place-items:center;font-size:14px;font-weight:600}
+.step:not(:last-child)::after{content:"";position:absolute;left:14.5px;top:32px;bottom:-2px;width:1.5px;background:var(--line-strong)}
+.step h4{font-size:15.5px;font-weight:600;margin-bottom:3px}
+.step p{font-size:13.5px;color:var(--ink-soft);line-height:1.55}
+.tag{display:inline-block;font-size:11px;font-weight:600;color:var(--brass);background:var(--brass-soft);border-radius:6px;padding:2px 8px;margin-top:6px}
+
+.calc-result{margin-top:18px;border-radius:14px;padding:20px 22px;background:var(--green-soft);border:1px solid #cfe0d6}
+.calc-result .big{font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:var(--green);letter-spacing:-.3px}
+.calc-result .lbl{font-size:12.5px;color:var(--ink-soft);margin-bottom:3px}
+.calc-line{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line-strong);font-size:14px}
+.calc-line:last-child{border-bottom:none}
+.calc-line b{color:var(--green)}
+
+.chk{display:flex;align-items:flex-start;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:11px;background:var(--surface);margin-bottom:9px;cursor:pointer;transition:.15s}
+.chk:hover{border-color:var(--line-strong)}
+.chk.done{background:var(--green-soft);border-color:#cfe0d6}
+.chk .box{width:21px;height:21px;border-radius:6px;border:2px solid var(--line-strong);flex:none;display:grid;place-items:center;font-size:13px;color:#fff;transition:.15s;margin-top:1px}
+.chk.done .box{background:var(--green);border-color:var(--green)}
+.chk .txt{font-size:14px;color:var(--ink)}
+.chk.done .txt{color:var(--ink-soft)}
+.chk .ref{font-size:11.5px;color:var(--muted);margin-top:2px}
+.progress{height:8px;background:var(--paper-2);border-radius:6px;overflow:hidden;margin:6px 0 20px}
+.progress > div{height:100%;background:linear-gradient(90deg,var(--green),var(--brass));transition:width .4s}
+
+.callout{display:flex;gap:12px;background:var(--brass-soft);border:1px solid #e6d4ad;border-radius:12px;padding:14px 16px;margin-top:18px}
+.callout .ci2{font-size:18px}
+.callout p{font-size:13px;color:#6b531f;line-height:1.5}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+.info-grid .ib{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:18px}
+.info-grid .ib h4{font-size:14.5px;font-weight:600;margin-bottom:7px;color:var(--green);display:flex;gap:8px;align-items:center}
+.info-grid .ib p,.info-grid .ib li{font-size:13px;color:var(--ink-soft);line-height:1.55}
+.info-grid .ib ul{padding-left:18px;margin-top:4px}
+.muted-note{font-size:12px;color:var(--muted);margin-top:22px;line-height:1.5;border-top:1px solid var(--line);padding-top:16px}
+.section-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:13px}
+
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:12.5px;text-align:center}
+
+@media(max-width:820px){
+  .cards{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+  .info-grid{grid-template-columns:1fr}
+  .hero{padding:34px 24px}
+  .hero h2{font-size:30px}
+  .h-sec{font-size:26px}
+}
+@media print{
+  header.top,nav.tabs,.doc-bar,footer{display:none!important}
+  body{background:#fff}
+  .doc-out{border:none}
+  #docText{max-height:none;padding:0}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand" onclick="go('home')">
+      <div class="mark serif">Ю</div>
+      <div>
+        <h1>ЮрHR</h1>
+        <div class="sub">Правовая поддержка HR-службы</div>
+      </div>
+    </div>
+    <span class="badge-mvp">MVP · прототип</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap tabs-in" id="tabs"></div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <section id="home" class="view active"></section>
+    <section id="nav" class="view"></section>
+    <section id="docs" class="view"></section>
+    <section id="calc" class="view"></section>
+    <section id="check" class="view"></section>
+    <section id="about" class="view"></section>
+  </div>
+</main>
+
+<footer><div class="wrap">ЮрHR — учебный прототип (MVP) цифрового LegalTech-решения · Обработка данных выполняется локально в браузере · Не является юридической консультацией</div></footer>
+<script>
+/* ============ УТИЛИТЫ ============ */
+const MONTHS=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+function fmtDate(iso){ if(!iso) return '«___» __________ 20__ г.'; const d=new Date(iso+'T00:00:00'); if(isNaN(d)) return iso; return `«${String(d.getDate()).padStart(2,'0')}» ${MONTHS[d.getMonth()]} ${d.getFullYear()} г.`; }
+function fmtShort(iso){ if(!iso) return '__.__.____'; const d=new Date(iso+'T00:00:00'); if(isNaN(d)) return iso; return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`; }
+function v(x,def){ return (x&&String(x).trim())?String(x).trim():(def||'____________________'); }
+function addCalDays(iso,n){ const d=new Date(iso+'T00:00:00'); d.setDate(d.getDate()+n); return d; }
+function addMonths(iso,n){ const d=new Date(iso+'T00:00:00'); d.setMonth(d.getMonth()+n); return d; }
+function isoOf(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function ruFull(d){ return `${String(d.getDate()).padStart(2,'0')} ${MONTHS[d.getMonth()]} ${d.getFullYear()} г.`; }
+
+/* ============ НАВИГАЦИЯ ============ */
+const TABS=[
+  {id:'home', label:'Главная', ic:'⌂'},
+  {id:'nav', label:'Правовой навигатор', ic:'⚖'},
+  {id:'docs', label:'Конструктор документов', ic:'📄'},
+  {id:'calc', label:'Калькулятор сроков', ic:'⏱'},
+  {id:'check', label:'Чек-листы', ic:'✓'},
+  {id:'about', label:'О сервисе', ic:'ⓘ'},
+];
+function go(id){
+  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active',s.id===id));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.id===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+const tabsEl=document.getElementById('tabs');
+TABS.forEach(t=>{
+  const b=document.createElement('button');
+  b.className='tab'+(t.id==='home'?' active':''); b.dataset.id=t.id;
+  b.innerHTML=`<span class="ic">${t.ic}</span>${t.label}`;
+  b.onclick=()=>go(t.id); tabsEl.appendChild(b);
+});
+
+/* ============ ГЛАВНАЯ ============ */
+document.getElementById('home').innerHTML=`
+<div class="hero">
+  <div class="eyebrow" style="color:var(--brass)">LegalTech · трудовое право РФ</div>
+  <h2 class="serif">Юрист в кадровой службе — у каждого специалиста</h2>
+  <p>Сервис проводит HR-специалиста по процедуре, рассчитывает процессуальные сроки и собирает готовые проекты кадровых документов. Без юриста на каждый шаг и без риска пропустить норму закона.</p>
+  <div class="stats">
+    <div><div class="n">4</div><div class="l">типовых процедуры</div></div>
+    <div><div class="n">5</div><div class="l">конструкторов документов</div></div>
+    <div><div class="n">100%</div><div class="l">обработка в браузере</div></div>
+  </div>
+</div>
+<div class="cards">
+  <div class="card" onclick="go('nav')"><div class="ci">⚖</div><h3>Правовой навигатор</h3><p>Пошаговый порядок действий по типовым кадровым ситуациям со ссылками на статьи ТК РФ.</p><div class="go">Открыть навигатор →</div></div>
+  <div class="card" onclick="go('docs')"><div class="ci">📄</div><h3>Конструктор документов</h3><p>Заполните форму — сервис соберёт корректный проект приказа или уведомления.</p><div class="go">Создать документ →</div></div>
+  <div class="card" onclick="go('calc')"><div class="ci">⏱</div><h3>Калькулятор сроков</h3><p>Расчёт предельных сроков: применение взыскания, отработка, уведомление о сокращении.</p><div class="go">Рассчитать срок →</div></div>
+  <div class="card" onclick="go('check')"><div class="ci">✓</div><h3>Чек-листы соответствия</h3><p>Контрольные списки, чтобы ни один обязательный шаг процедуры не был пропущен.</p><div class="go">Открыть чек-лист →</div></div>
+</div>
+<div class="callout"><span class="ci2">⚑</span><p><b>О данных.</b> Сервис не имеет сервера и не передаёт введённую информацию третьим лицам: все расчёты и сборка документов выполняются локально в браузере и не сохраняются после закрытия вкладки.</p></div>`;
+
+/* ============ ДАННЫЕ: ПРАВОВОЙ НАВИГАТОР ============ */
+const SCENARIOS=[
+ {id:'discipline', ic:'⚠', t:'Применение дисциплинарного взыскания', s:'Замечание или выговор за дисциплинарный проступок',
+  law:'ст. 192–193 ТК РФ',
+  steps:[
+   {h:'Зафиксировать проступок', p:'Оформите докладную записку непосредственного руководителя и/или акт о нарушении. Зафиксируйте дату обнаружения проступка — от неё отсчитывается срок.', tag:'Документ: докладная / акт'},
+   {h:'Затребовать письменное объяснение', p:'Вручите работнику письменное уведомление с требованием дать объяснение. У работника есть 2 рабочих дня на предоставление объяснительной записки.', tag:'ст. 193 ТК РФ · 2 рабочих дня'},
+   {h:'Составить акт при отсутствии объяснения', p:'Если по истечении 2 рабочих дней объяснение не предоставлено — составьте соответствующий акт. Непредоставление объяснения не препятствует применению взыскания.'},
+   {h:'Проверить сроки и соразмерность', p:'Взыскание применяется не позднее 1 месяца со дня обнаружения проступка и не позднее 6 месяцев со дня его совершения. Учитывайте тяжесть проступка и обстоятельства.', tag:'1 мес. / 6 мес.'},
+   {h:'Издать приказ о взыскании', p:'Оформите приказ с указанием вида взыскания, описанием проступка и основаниями. За один проступок — только одно взыскание.', tag:'Конструктор → Приказ о взыскании'},
+   {h:'Ознакомить работника под подпись', p:'Объявите приказ работнику под роспись в течение 3 рабочих дней со дня издания. При отказе — составьте акт об отказе от ознакомления.', tag:'3 рабочих дня'},
+  ]},
+ {id:'resign', ic:'➜', t:'Увольнение по собственному желанию', s:'Расторжение трудового договора по инициативе работника',
+  law:'ст. 80 ТК РФ',
+  steps:[
+   {h:'Принять заявление работника', p:'Работник подаёт письменное заявление. Зарегистрируйте его и зафиксируйте дату получения — срок предупреждения отсчитывается со следующего дня.'},
+   {h:'Рассчитать дату увольнения', p:'По общему правилу — не ранее чем через 2 недели (14 календарных дней). По соглашению сторон срок может быть сокращён.', tag:'14 кал. дней'},
+   {h:'Учесть особые случаи', p:'При невозможности продолжать работу (зачисление в учебное заведение, выход на пенсию и др.) увольнение производится в срок, указанный в заявлении.'},
+   {h:'Издать приказ о прекращении договора', p:'Оформите приказ по основанию п. 3 ч. 1 ст. 77 ТК РФ. Ознакомьте работника под роспись.', tag:'Конструктор → Приказ об увольнении'},
+   {h:'Произвести расчёт и выдать документы', p:'В последний рабочий день выплатите все причитающиеся суммы и выдайте трудовую книжку (или сведения о трудовой деятельности), справки.', tag:'ст. 84.1, 140 ТК РФ'},
+  ]},
+ {id:'redundancy', ic:'▼', t:'Сокращение численности или штата', s:'Расторжение договора по инициативе работодателя',
+  law:'ст. 81, 179, 180, 178 ТК РФ',
+  steps:[
+   {h:'Издать приказ о сокращении', p:'Утвердите новое штатное расписание и издайте приказ о сокращении численности/штата с указанием сокращаемых должностей.'},
+   {h:'Оценить преимущественное право', p:'Определите работников с преимущественным правом на оставление на работе (более высокая производительность и квалификация и др.).', tag:'ст. 179 ТК РФ'},
+   {h:'Письменно уведомить работника', p:'Персонально и под роспись предупредите работника не менее чем за 2 месяца до увольнения.', tag:'Конструктор → Уведомление · 2 месяца'},
+   {h:'Уведомить профсоюз и службу занятости', p:'Сообщите в выборный орган первичной профсоюзной организации и в органы службы занятости (за 2 месяца, при массовом увольнении — за 3).', tag:'ст. 82 ТК РФ'},
+   {h:'Предлагать имеющиеся вакансии', p:'В течение всего срока предупреждения предлагайте работнику все подходящие вакантные должности.', tag:'ст. 180 ТК РФ'},
+   {h:'Оформить увольнение и пособие', p:'Издайте приказ, выплатите выходное пособие и сохраняемый средний заработок на период трудоустройства.', tag:'ст. 178 ТК РФ'},
+  ]},
+ {id:'hire', ic:'＋', t:'Оформление приёма на работу', s:'Заключение трудового договора с новым работником',
+  law:'ст. 67, 68 ТК РФ',
+  steps:[
+   {h:'Получить документы при приёме', p:'Запросите паспорт, СНИЛС, документ об образовании, сведения о трудовой деятельности и иные документы, предусмотренные ст. 65 ТК РФ.'},
+   {h:'Ознакомить с локальными актами', p:'До подписания трудового договора ознакомьте работника под роспись с ПВТР, положением об оплате труда, должностной инструкцией и др.', tag:'ст. 68 ТК РФ'},
+   {h:'Заключить трудовой договор', p:'Оформите договор письменно в двух экземплярах; один передаётся работнику под роспись на экземпляре работодателя.', tag:'ст. 67 ТК РФ · 2 экземпляра'},
+   {h:'Издать приказ о приёме', p:'Содержание приказа должно соответствовать условиям трудового договора. Ознакомьте работника под роспись.', tag:'Конструктор → Приказ о приёме'},
+   {h:'Внести сведения о трудовой деятельности', p:'Передайте сведения о приёме (форма ЕФС-1) и при необходимости внесите запись в трудовую книжку.', tag:'ст. 66, 66.1 ТК РФ'},
+  ]},
+];
+
+/* ============ РЕНДЕР: ПРАВОВОЙ НАВИГАТОР ============ */
+function renderNav(){
+  const el=document.getElementById('nav');
+  let picks=SCENARIOS.map((s,i)=>`<button class="pick${i===0?' sel':''}" data-i="${i}" onclick="selScenario(${i})">
+     <span class="pic">${s.ic}</span><span><span class="pt">${s.t}</span><span class="ps">${s.law}</span></span></button>`).join('');
+  el.innerHTML=`
+    <div class="eyebrow">Модуль 01</div>
+    <div class="h-sec serif">Правовой навигатор</div>
+    <p class="lead">Выберите кадровую ситуацию — сервис покажет корректный порядок действий со сроками и ссылками на нормы Трудового кодекса РФ.</p>
+    <div class="grid2">
+      <div><div class="section-title">Ситуация</div><div class="list-pick">${picks}</div></div>
+      <div class="panel" id="scenBody"></div>
+    </div>`;
+  selScenario(0);
+}
+function selScenario(i){
+  document.querySelectorAll('#nav .pick').forEach(p=>p.classList.toggle('sel',+p.dataset.i===i));
+  const s=SCENARIOS[i];
+  const steps=s.steps.map(st=>`<div class="step"><h4>${st.h}</h4><p>${st.p}</p>${st.tag?`<span class="tag">${st.tag}</span>`:''}</div>`).join('');
+  document.getElementById('scenBody').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:6px;flex-wrap:wrap">
+      <div><h3 style="font-size:20px;font-weight:600;letter-spacing:-.3px">${s.ic} ${s.t}</h3>
+      <div style="font-size:12.5px;color:var(--brass);font-weight:600;margin-top:3px">Правовое основание: ${s.law}</div></div>
+    </div>
+    <p style="font-size:13.5px;color:var(--muted);margin-bottom:20px">${s.s}</p>
+    <div class="steps">${steps}</div>
+    <div class="callout"><span class="ci2">⚖</span><p>Информация носит справочный характер и не заменяет правовую экспертизу конкретной ситуации. Перед применением проверьте действующую редакцию ТК РФ и локальные акты организации.</p></div>`;
+}
+
+/* ============ ДАННЫЕ: КОНСТРУКТОР ДОКУМЕНТОВ ============ */
+const DOCS=[
+ {id:'hire', ic:'＋', t:'Приказ о приёме на работу', s:'Унифицированная логика формы Т-1 · ст. 68 ТК РФ',
+  fields:[
+   {n:'org',l:'Наименование организации',p:'ООО «Пример»'},
+   {n:'city',l:'Город',p:'г. Казань'},
+   {n:'num',l:'Номер приказа',p:'15-к'},
+   {n:'date',l:'Дата приказа',type:'date'},
+   {n:'fio',l:'Ф.И.О. работника',p:'Иванов Иван Иванович'},
+   {n:'pos',l:'Должность',p:'юрисконсульт'},
+   {n:'dep',l:'Структурное подразделение',p:'юридический отдел'},
+   {n:'start',l:'Дата начала работы',type:'date'},
+   {n:'salary',l:'Оклад, руб.',p:'80 000'},
+   {n:'probation',l:'Испытательный срок',p:'3 месяца / без испытания'},
+   {n:'contract',l:'Трудовой договор №, дата',p:'№ 42 от 15.05.2026'},
+   {n:'head',l:'Руководитель (должность, Ф.И.О.)',p:'Генеральный директор Петров П.П.'},
+  ],
+  build:d=>`${v(d.org).toUpperCase()}
+
+ПРИКАЗ № ${v(d.num,'____')}
+о приёме работника на работу
+
+${v(d.city,'г. ____________')}\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0${fmtDate(d.date)}
+
+В соответствии со статьёй 68 Трудового кодекса Российской Федерации и на основании заключённого трудового договора ${v(d.contract,'№ ____ от __.__.____')}
+
+ПРИКАЗЫВАЮ:
+
+1. Принять ${v(d.fio,'Ф.И.О.')} на работу в ${v(d.dep,'____________')} на должность «${v(d.pos,'____________')}» с ${fmtShort(d.start)}.
+2. Установить должностной оклад в размере ${v(d.salary,'________')} руб. в месяц.
+3. Установить испытательный срок: ${v(d.probation,'____________')}.
+4. Специалисту по кадрам ознакомить работника с настоящим приказом, правилами внутреннего трудового распорядка и иными локальными нормативными актами под роспись.
+
+Основание: трудовой договор ${v(d.contract,'№ ____ от __.__.____')}.
+
+${v(d.head,'Руководитель ____________')}\u00A0\u00A0\u00A0__________________ /________________/
+
+С приказом ознакомлен(а):\u00A0\u00A0__________________ /${v(d.fio,'________________')}/
+${fmtDate(d.date)}`},
+
+ {id:'discipline', ic:'⚠', t:'Приказ о применении дисциплинарного взыскания', s:'ст. 192–193 ТК РФ',
+  fields:[
+   {n:'org',l:'Наименование организации',p:'ООО «Пример»'},
+   {n:'city',l:'Город',p:'г. Казань'},
+   {n:'num',l:'Номер приказа',p:'7-д'},
+   {n:'date',l:'Дата приказа',type:'date'},
+   {n:'fio',l:'Ф.И.О. работника',p:'Иванов Иван Иванович'},
+   {n:'pos',l:'Должность',p:'менеджер отдела продаж'},
+   {n:'kind',l:'Вид взыскания',type:'select',opts:['замечание','выговор']},
+   {n:'misconduct',l:'Описание проступка',type:'area',p:'отсутствие на рабочем месте 12.05.2026 в течение рабочего дня без уважительных причин'},
+   {n:'violated',l:'Нарушенная норма / пункт ЛНА',p:'п. 4.2 Правил внутреннего трудового распорядка'},
+   {n:'discovered',l:'Дата обнаружения проступка',type:'date'},
+   {n:'basis',l:'Основания (докладная, акт, объяснение)',type:'area',p:'докладная записка от 12.05.2026; акт об отсутствии на рабочем месте от 12.05.2026; объяснительная записка работника от 14.05.2026'},
+   {n:'head',l:'Руководитель (должность, Ф.И.О.)',p:'Генеральный директор Петров П.П.'},
+  ],
+  build:d=>`${v(d.org).toUpperCase()}
+
+ПРИКАЗ № ${v(d.num,'____')}
+о применении дисциплинарного взыскания
+
+${v(d.city,'г. ____________')}\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0${fmtDate(d.date)}
+
+${v(d.fio,'Ф.И.О.')}, занимающий(ая) должность «${v(d.pos,'____________')}», совершил(а) дисциплинарный проступок: ${v(d.misconduct,'____________')}, что является нарушением ${v(d.violated,'____________')}.
+
+Проступок обнаружен ${fmtShort(d.discovered)}. От работника затребовано письменное объяснение; срок для его предоставления соблюдён (ст. 193 ТК РФ).
+
+На основании статей 192, 193 Трудового кодекса Российской Федерации, с учётом тяжести совершённого проступка и обстоятельств, при которых он был совершён,
+
+ПРИКАЗЫВАЮ:
+
+1. Применить к ${v(d.fio,'Ф.И.О.')} дисциплинарное взыскание в виде ${v(d.kind,'____________')}.
+2. Специалисту по кадрам объявить настоящий приказ работнику под роспись в течение трёх рабочих дней со дня его издания.
+
+Основание: ${v(d.basis,'____________')}.
+
+${v(d.head,'Руководитель ____________')}\u00A0\u00A0\u00A0__________________ /________________/
+
+С приказом ознакомлен(а):\u00A0\u00A0__________________ /${v(d.fio,'________________')}/
+${fmtDate(d.date)}`},
+
+ {id:'explain', ic:'✉', t:'Уведомление о предоставлении объяснений', s:'ст. 193 ТК РФ',
+  fields:[
+   {n:'org',l:'Наименование организации',p:'ООО «Пример»'},
+   {n:'num',l:'Исходящий номер',p:'12'},
+   {n:'date',l:'Дата уведомления',type:'date'},
+   {n:'fio',l:'Ф.И.О. работника',p:'Иванов Иван Иванович'},
+   {n:'pos',l:'Должность',p:'менеджер отдела продаж'},
+   {n:'fact',l:'Обстоятельства, требующие объяснений',type:'area',p:'отсутствие на рабочем месте 12.05.2026 с 09:00 до 18:00'},
+   {n:'head',l:'Руководитель (должность, Ф.И.О.)',p:'Генеральный директор Петров П.П.'},
+  ],
+  build:d=>`${v(d.org).toUpperCase()}
+
+УВЕДОМЛЕНИЕ № ${v(d.num,'____')}
+о необходимости предоставить письменное объяснение
+
+${fmtDate(d.date)}
+
+Уважаемый(ая) ${v(d.fio,'Ф.И.О.')}!
+
+В связи с тем, что ${v(d.fact,'____________')}, на основании статьи 193 Трудового кодекса Российской Федерации Вам предлагается предоставить письменное объяснение по данному факту.
+
+Объяснение необходимо предоставить в течение двух рабочих дней со дня получения настоящего уведомления.
+
+В случае непредоставления объяснения в указанный срок будет составлен соответствующий акт. Непредоставление объяснения не препятствует применению дисциплинарного взыскания.
+
+${v(d.head,'Руководитель ____________')}\u00A0\u00A0\u00A0__________________ /________________/
+
+Уведомление получил(а):\u00A0\u00A0__________________ /${v(d.fio,'________________')}/
+«___» __________ 20__ г.`},
+
+ {id:'redundancy', ic:'▼', t:'Уведомление о сокращении', s:'ст. 180 ТК РФ · не менее чем за 2 месяца',
+  fields:[
+   {n:'org',l:'Наименование организации',p:'ООО «Пример»'},
+   {n:'num',l:'Исходящий номер',p:'33'},
+   {n:'date',l:'Дата уведомления',type:'date'},
+   {n:'fio',l:'Ф.И.О. работника',p:'Иванов Иван Иванович'},
+   {n:'pos',l:'Должность',p:'специалист отдела закупок'},
+   {n:'order',l:'Реквизиты приказа о сокращении',p:'№ 50 от 15.05.2026'},
+   {n:'fire',l:'Планируемая дата увольнения',type:'date'},
+   {n:'head',l:'Руководитель (должность, Ф.И.О.)',p:'Генеральный директор Петров П.П.'},
+  ],
+  build:d=>`${v(d.org).toUpperCase()}
+
+УВЕДОМЛЕНИЕ № ${v(d.num,'____')}
+о предстоящем увольнении в связи с сокращением
+
+${fmtDate(d.date)}
+
+Уважаемый(ая) ${v(d.fio,'Ф.И.О.')}!
+
+Уведомляем Вас о том, что в соответствии с приказом ${v(d.order,'№ ____ от __.__.____')} занимаемая Вами должность «${v(d.pos,'____________')}» подлежит сокращению.
+
+На основании пункта 2 части 1 статьи 81 и статьи 180 Трудового кодекса Российской Федерации трудовой договор с Вами будет расторгнут ${fmtShort(d.fire)}.
+
+В течение срока предупреждения Вам будут предлагаться все имеющиеся вакантные должности, соответствующие Вашей квалификации и состоянию здоровья. При увольнении Вам гарантируются выплаты, предусмотренные статьёй 178 ТК РФ.
+
+С Вашего письменного согласия трудовой договор может быть расторгнут до истечения срока предупреждения с выплатой дополнительной компенсации (ч. 3 ст. 180 ТК РФ).
+
+${v(d.head,'Руководитель ____________')}\u00A0\u00A0\u00A0__________________ /________________/
+
+Уведомление получил(а):\u00A0\u00A0__________________ /${v(d.fio,'________________')}/
+«___» __________ 20__ г.`},
+
+ {id:'terminate', ic:'➜', t:'Приказ об увольнении (по собственному желанию)', s:'п. 3 ч. 1 ст. 77, ст. 80 ТК РФ',
+  fields:[
+   {n:'org',l:'Наименование организации',p:'ООО «Пример»'},
+   {n:'city',l:'Город',p:'г. Казань'},
+   {n:'num',l:'Номер приказа',p:'21-к'},
+   {n:'date',l:'Дата приказа',type:'date'},
+   {n:'fio',l:'Ф.И.О. работника',p:'Иванов Иван Иванович'},
+   {n:'pos',l:'Должность',p:'юрисконсульт'},
+   {n:'fire',l:'Дата увольнения (последний рабочий день)',type:'date'},
+   {n:'app',l:'Дата заявления работника',type:'date'},
+   {n:'head',l:'Руководитель (должность, Ф.И.О.)',p:'Генеральный директор Петров П.П.'},
+  ],
+  build:d=>`${v(d.org).toUpperCase()}
+
+ПРИКАЗ № ${v(d.num,'____')}
+о прекращении (расторжении) трудового договора с работником (увольнении)
+
+${v(d.city,'г. ____________')}\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0${fmtDate(d.date)}
+
+ПРИКАЗЫВАЮ:
+
+1. Прекратить действие трудового договора, уволить ${fmtShort(d.fire)} ${v(d.fio,'Ф.И.О.')}, занимающего(ую) должность «${v(d.pos,'____________')}», по инициативе работника — пункт 3 части первой статьи 77 Трудового кодекса Российской Федерации (статья 80 ТК РФ).
+2. Бухгалтерии произвести с работником окончательный расчёт в день увольнения (ст. 140 ТК РФ).
+3. Специалисту по кадрам выдать работнику трудовую книжку (сведения о трудовой деятельности) и ознакомить с настоящим приказом под роспись.
+
+Основание: заявление работника от ${fmtShort(d.app)}.
+
+${v(d.head,'Руководитель ____________')}\u00A0\u00A0\u00A0__________________ /________________/
+
+С приказом ознакомлен(а):\u00A0\u00A0__________________ /${v(d.fio,'________________')}/
+${fmtDate(d.date)}`},
+];
+
+/* ============ РЕНДЕР: КОНСТРУКТОР ДОКУМЕНТОВ ============ */
+let curDoc=0;
+function renderDocs(){
+  const el=document.getElementById('docs');
+  let picks=DOCS.map((d,i)=>`<button class="pick${i===0?' sel':''}" data-i="${i}" onclick="selDoc(${i})">
+     <span class="pic">${d.ic}</span><span><span class="pt">${d.t}</span><span class="ps">${d.s}</span></span></button>`).join('');
+  el.innerHTML=`
+    <div class="eyebrow">Модуль 02</div>
+    <div class="h-sec serif">Конструктор документов</div>
+    <p class="lead">Заполните поля — сервис автоматически соберёт корректный проект кадрового документа. Готовый текст можно скопировать, скачать или сохранить в PDF через печать.</p>
+    <div class="grid2">
+      <div><div class="section-title">Тип документа</div><div class="list-pick">${picks}</div></div>
+      <div class="panel"><div id="docForm"></div><div id="docResult"></div></div>
+    </div>`;
+  selDoc(0);
+}
+function selDoc(i){
+  curDoc=i;
+  document.querySelectorAll('#docs .pick').forEach(p=>p.classList.toggle('sel',+p.dataset.i===i));
+  const d=DOCS[i];
+  let fields='';
+  for(let k=0;k<d.fields.length;k++){
+    const f=d.fields[k];
+    let input;
+    if(f.type==='area') input=`<textarea id="f_${f.n}" placeholder="${f.p||''}"></textarea>`;
+    else if(f.type==='select') input=`<select id="f_${f.n}">${f.opts.map(o=>`<option value="${o}">${o}</option>`).join('')}</select>`;
+    else if(f.type==='date') input=`<input type="date" id="f_${f.n}">`;
+    else input=`<input type="text" id="f_${f.n}" placeholder="${f.p||''}">`;
+    fields+=`<label class="fld"><span class="lab">${f.l}</span>${input}</label>`;
+  }
+  document.getElementById('docForm').innerHTML=`
+    <h3 style="font-size:19px;font-weight:600;margin-bottom:4px">${d.ic} ${d.t}</h3>
+    <div style="font-size:12.5px;color:var(--brass);font-weight:600;margin-bottom:18px">${d.s}</div>
+    ${fields}
+    <div class="btn-row"><button class="btn btn-primary" onclick="buildDoc()">Сформировать документ</button>
+    <button class="btn btn-ghost" onclick="fillSample()">Заполнить примером</button></div>`;
+  document.getElementById('docResult').innerHTML='';
+}
+function readDoc(){ const d=DOCS[curDoc],o={}; d.fields.forEach(f=>{const e=document.getElementById('f_'+f.n); o[f.n]=e?e.value:'';}); return o; }
+function fillSample(){
+  const d=DOCS[curDoc];
+  d.fields.forEach(f=>{const e=document.getElementById('f_'+f.n); if(!e)return;
+    if(f.type==='date'){ e.value=isoOf(new Date()); }
+    else if(f.type==='select'){ e.selectedIndex=0; }
+    else if(f.p && !f.p.includes('/')){ e.value=f.p; }
+    else if(f.p){ e.value=f.p.split('/')[0].trim(); }
+  });
+}
+function buildDoc(){
+  const d=DOCS[curDoc], data=readDoc(), text=d.build(data);
+  document.getElementById('docResult').innerHTML=`
+   <div class="doc-out">
+     <div class="doc-bar"><span class="t">ПРОЕКТ ДОКУМЕНТА</span>
+       <div class="acts">
+         <button class="mini" onclick="copyDoc()">Копировать</button>
+         <button class="mini" onclick="downloadDoc()">Скачать .txt</button>
+         <button class="mini" onclick="window.print()">Печать / PDF</button>
+       </div></div>
+     <div id="docText"></div>
+   </div>
+   <div class="callout"><span class="ci2">✎</span><p>Проверьте проект перед использованием: подставьте реквизиты, проверьте сроки и соответствие локальным актам организации. Поля со знаком «____» заполняются вручную.</p></div>`;
+  document.getElementById('docText').textContent=text;
+}
+function copyDoc(){ const t=document.getElementById('docText').textContent;
+  navigator.clipboard.writeText(t).then(()=>toast('Скопировано в буфер обмена')).catch(()=>toast('Не удалось скопировать')); }
+function downloadDoc(){ const t=document.getElementById('docText').textContent;
+  const blob=new Blob([t],{type:'text/plain;charset=utf-8'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=(DOCS[curDoc].t.replace(/[^а-яА-Яa-zA-Z0-9 ]/g,'').slice(0,40)||'document')+'.txt'; a.click(); URL.revokeObjectURL(a.href); toast('Файл сохранён'); }
+function toast(msg){ let t=document.getElementById('toast'); if(!t){ t=document.createElement('div'); t.id='toast';
+  t.style.cssText='position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--green);color:#F3EFE6;padding:11px 20px;border-radius:10px;font-size:13.5px;font-weight:600;z-index:200;box-shadow:0 8px 24px -8px rgba(0,0,0,.4);transition:opacity .3s'; document.body.appendChild(t);}
+  t.textContent=msg; t.style.opacity='1'; clearTimeout(t._x); t._x=setTimeout(()=>t.style.opacity='0',1800); }
+
+/* ============ РЕНДЕР: КАЛЬКУЛЯТОР СРОКОВ ============ */
+const CALC_TYPES=[
+ {id:'discipline', t:'Срок применения дисциплинарного взыскания', dateLabel:'Дата обнаружения проступка',
+  compute:iso=>{ const m1=addMonths(iso,1), m6=addMonths(iso,6);
+   return {main:{lbl:'Крайний срок применения взыскания',val:ruFull(m1)},
+     lines:[['День обнаружения проступка',ruFull(new Date(iso+'T00:00:00'))],
+            ['Предельный срок (1 месяц)',ruFull(m1)],
+            ['Абсолютный предел (6 месяцев со дня совершения)',ruFull(m6)]],
+     note:'В месячный срок не включаются периоды болезни и отпуска работника, а также время на учёт мнения профсоюза (ст. 193 ТК РФ).'};}},
+ {id:'resign', t:'Дата увольнения по собственному желанию', dateLabel:'Дата получения заявления',
+  compute:iso=>{ const fire=addCalDays(iso,14);
+   return {main:{lbl:'Дата увольнения (последний рабочий день)',val:ruFull(fire)},
+     lines:[['Дата получения заявления',ruFull(new Date(iso+'T00:00:00'))],
+            ['Начало срока предупреждения (следующий день)',ruFull(addCalDays(iso,1))],
+            ['Срок предупреждения',' 14 календарных дней'],
+            ['Дата увольнения',ruFull(fire)]],
+     note:'По соглашению сторон срок отработки может быть сокращён. Для руководителя организации срок предупреждения — 1 месяц (ст. 280 ТК РФ).'};}},
+ {id:'redundancy', t:'Срок при сокращении численности / штата', dateLabel:'Дата вручения уведомления',
+  compute:iso=>{ const fire=addMonths(iso,2);
+   return {main:{lbl:'Минимальная дата увольнения',val:ruFull(fire)},
+     lines:[['Дата вручения уведомления',ruFull(new Date(iso+'T00:00:00'))],
+            ['Минимальный срок предупреждения',' 2 месяца'],
+            ['Не ранее',ruFull(fire)]],
+     note:'При массовом увольнении органы службы занятости уведомляются не менее чем за 3 месяца. Сроки исчисляются персонально для каждого работника со дня вручения ему уведомления под роспись.'};}},
+];
+let curCalc=0;
+function renderCalc(){
+  const el=document.getElementById('calc');
+  el.innerHTML=`
+   <div class="eyebrow">Модуль 03</div>
+   <div class="h-sec serif">Калькулятор процессуальных сроков</div>
+   <p class="lead">Пропуск срока — частая причина признания кадрового решения незаконным. Укажите исходную дату, и сервис рассчитает предельные сроки процедуры.</p>
+   <div class="panel" style="max-width:620px">
+     <label class="fld"><span class="lab">Тип процедуры</span>
+       <select id="calcType" onchange="curCalc=this.selectedIndex;document.getElementById('calcDateLbl').textContent=CALC_TYPES[curCalc].dateLabel;document.getElementById('calcRes').innerHTML=''">
+         ${CALC_TYPES.map(c=>`<option>${c.t}</option>`).join('')}
+       </select></label>
+     <label class="fld"><span class="lab" id="calcDateLbl">${CALC_TYPES[0].dateLabel}</span>
+       <input type="date" id="calcDate"></label>
+     <div class="btn-row"><button class="btn btn-primary" onclick="runCalc()">Рассчитать срок</button></div>
+     <div id="calcRes"></div>
+   </div>`;
+}
+function runCalc(){
+  const iso=document.getElementById('calcDate').value;
+  if(!iso){ toast('Укажите дату'); return; }
+  const r=CALC_TYPES[curCalc].compute(iso);
+  document.getElementById('calcRes').innerHTML=`
+   <div class="calc-result">
+     <div class="lbl">${r.main.lbl}</div>
+     <div class="big serif">${r.main.val}</div>
+     <div style="margin-top:14px">${r.lines.map(l=>`<div class="calc-line"><span>${l[0]}</span><b>${l[1]}</b></div>`).join('')}</div>
+   </div>
+   <div class="callout"><span class="ci2">⚑</span><p>${r.note}</p></div>`;
+}
+
+/* ============ РЕНДЕР: ЧЕК-ЛИСТЫ ============ */
+const CHECKS=[
+ {id:'hire', t:'Приём на работу', items:[
+   ['Получены документы работника (паспорт, СНИЛС, об образовании и др.)','ст. 65 ТК РФ'],
+   ['Работник ознакомлен под роспись с ПВТР и иными ЛНА до подписания договора','ст. 68 ТК РФ'],
+   ['Трудовой договор заключён письменно в двух экземплярах','ст. 67 ТК РФ'],
+   ['Экземпляр договора вручён работнику под роспись',''],
+   ['Издан приказ о приёме, работник ознакомлен под роспись','ст. 68 ТК РФ'],
+   ['Поданы сведения о приёме (ЕФС-1) / внесена запись в трудовую книжку','ст. 66, 66.1 ТК РФ'],
+   ['Оформлено согласие на обработку персональных данных','ст. 9 ФЗ-152'],
+ ]},
+ {id:'discipline', t:'Дисциплинарное взыскание', items:[
+   ['Проступок зафиксирован (докладная / акт), установлена дата обнаружения','ст. 192 ТК РФ'],
+   ['Затребовано письменное объяснение работника','ст. 193 ТК РФ'],
+   ['Соблюдён срок 2 рабочих дня на объяснение; при отсутствии — составлен акт','ст. 193 ТК РФ'],
+   ['Проверены сроки: не позднее 1 месяца с обнаружения / 6 месяцев с совершения','ст. 193 ТК РФ'],
+   ['Учтены тяжесть проступка и обстоятельства его совершения','ст. 192 ТК РФ'],
+   ['Издан приказ о применении взыскания','ст. 193 ТК РФ'],
+   ['Работник ознакомлен с приказом под роспись в течение 3 рабочих дней','ст. 193 ТК РФ'],
+ ]},
+ {id:'redundancy', t:'Сокращение численности / штата', items:[
+   ['Издан приказ о сокращении, утверждено новое штатное расписание','ст. 81 ТК РФ'],
+   ['Оценено преимущественное право на оставление на работе','ст. 179 ТК РФ'],
+   ['Работник персонально уведомлён под роспись не менее чем за 2 месяца','ст. 180 ТК РФ'],
+   ['Уведомлены профсоюз и органы службы занятости','ст. 82 ТК РФ'],
+   ['Предложены все подходящие вакантные должности','ст. 180 ТК РФ'],
+   ['Издан приказ об увольнении, произведён расчёт','ст. 84.1, 140 ТК РФ'],
+   ['Выплачено выходное пособие и сохраняемый заработок','ст. 178 ТК РФ'],
+ ]},
+ {id:'pdn', t:'Соответствие 152-ФЗ при обработке ПДн', items:[
+   ['Получено согласие работника на обработку персональных данных','ст. 9 ФЗ-152'],
+   ['Утверждена и опубликована политика обработки ПДн','ст. 18.1 ФЗ-152'],
+   ['Определены цели и состав обрабатываемых данных (минимизация)','ст. 5 ФЗ-152'],
+   ['Назначен ответственный за организацию обработки ПДн','ст. 22.1 ФЗ-152'],
+   ['Приняты правовые, организационные и технические меры защиты','ст. 18.1, 19 ФЗ-152'],
+   ['Регламентированы сроки хранения и порядок уничтожения ПДн','ст. 5, 21 ФЗ-152'],
+   ['Подано уведомление в Роскомнадзор об обработке ПДн','ст. 22 ФЗ-152'],
+ ]},
+];
+let curCheck=0; const checkState={};
+function renderCheck(){
+  const el=document.getElementById('check');
+  let picks=CHECKS.map((c,i)=>`<button class="pick${i===0?' sel':''}" data-i="${i}" onclick="selCheck(${i})">
+     <span class="pic">☑</span><span><span class="pt">${c.t}</span><span class="ps">${c.items.length} пунктов</span></span></button>`).join('');
+  el.innerHTML=`
+   <div class="eyebrow">Модуль 04</div>
+   <div class="h-sec serif">Чек-листы соответствия</div>
+   <p class="lead">Контрольные списки обязательных шагов процедуры. Отмечайте выполненные пункты — прогресс показывает готовность к завершению процесса.</p>
+   <div class="grid2">
+     <div><div class="section-title">Процедура</div><div class="list-pick">${picks}</div></div>
+     <div class="panel" id="checkBody"></div>
+   </div>`;
+  selCheck(0);
+}
+function selCheck(i){
+  curCheck=i;
+  document.querySelectorAll('#check .pick').forEach(p=>p.classList.toggle('sel',+p.dataset.i===i));
+  const c=CHECKS[i]; if(!checkState[c.id]) checkState[c.id]=c.items.map(()=>false);
+  drawCheck();
+}
+function drawCheck(){
+  const c=CHECKS[curCheck], st=checkState[c.id];
+  const done=st.filter(Boolean).length, pct=Math.round(done/c.items.length*100);
+  let items=c.items.map((it,k)=>`<div class="chk${st[k]?' done':''}" onclick="toggleChk(${k})">
+     <div class="box">${st[k]?'✓':''}</div>
+     <div><div class="txt">${it[0]}</div>${it[1]?`<div class="ref">${it[1]}</div>`:''}</div></div>`).join('');
+  document.getElementById('checkBody').innerHTML=`
+   <h3 style="font-size:19px;font-weight:600;margin-bottom:10px">${c.t}</h3>
+   <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--ink-soft);margin-bottom:4px"><span>Выполнено ${done} из ${c.items.length}</span><b style="color:var(--green)">${pct}%</b></div>
+   <div class="progress"><div style="width:${pct}%"></div></div>
+   ${items}
+   ${pct===100?'<div class="callout" style="background:var(--green-soft);border-color:#cfe0d6"><span class="ci2">✓</span><p style="color:var(--green)">Все обязательные шаги процедуры отмечены как выполненные.</p></div>':''}`;
+}
+function toggleChk(k){ const c=CHECKS[curCheck]; checkState[c.id][k]=!checkState[c.id][k]; drawCheck(); }
+
+/* ============ РЕНДЕР: О СЕРВИСЕ ============ */
+document.getElementById('about').innerHTML=`
+ <div class="eyebrow">О продукте</div>
+ <div class="h-sec serif">Что такое ЮрHR</div>
+ <p class="lead">Учебный прототип (MVP) цифрового LegalTech-решения, автоматизирующего рутинную правовую поддержку кадровой службы в сфере трудового права РФ.</p>
+ <div class="info-grid">
+   <div class="ib"><h4>⚑ Проблема</h4><p>Кадровые специалисты ежедневно принимают юридически значимые решения (взыскания, увольнения, сокращения), но не всегда имеют доступ к юристу. Ошибка в процедуре или пропуск срока ведёт к восстановлению работника, штрафам и репутационным потерям.</p></div>
+   <div class="ib"><h4>👤 Целевая аудитория</h4><p>HR-специалисты и кадровики малого и среднего бизнеса без выделенного юриста; начинающие специалисты по кадрам; руководители небольших компаний, ведущие кадровый учёт самостоятельно.</p></div>
+   <div class="ib"><h4>↻ Было / Стало</h4><p><b>Было:</b> поиск норм вручную, запрос юриста, шаблоны из интернета, риск ошибки в сроках.<br><b>Стало:</b> единое окно — навигатор, готовый документ и расчёт сроков за минуты, по актуальным нормам.</p></div>
+   <div class="ib"><h4>🔒 Правовая безопасность</h4><p>Сервис не имеет серверной части и не передаёт введённые данные третьим лицам — обработка идёт локально в браузере. Пакет правовых документов (политика ПДн, согласие, анализ рисков) приложен к проекту.</p></div>
+ </div>
+ <div class="info-grid" style="margin-top:16px">
+   <div class="ib"><h4>⚙ Технологическая основа</h4><p>Автономное одностраничное веб-приложение (HTML / CSS / JavaScript) без внешних зависимостей и сервера. Открывается по ссылке в любом браузере, в том числе на смартфоне.</p></div>
+   <div class="ib"><h4>🧭 Путь пользователя (CJM)</h4><ul><li>Выбор кадровой ситуации</li><li>Изучение порядка действий и сроков</li><li>Заполнение формы документа</li><li>Получение готового проекта</li><li>Контроль по чек-листу</li></ul></div>
+ </div>
+ <p class="muted-note">Сервис носит справочно-вспомогательный характер, не является юридической консультацией и не заменяет правовую экспертизу конкретной ситуации. Перед применением документов проверяйте действующую редакцию нормативных актов.</p>`;
+
+/* ============ ИНИЦИАЛИЗАЦИЯ ============ */
+renderNav(); renderDocs(); renderCalc(); renderCheck();
+</script>
+</body>
+</html>
